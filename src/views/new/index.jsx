@@ -1,18 +1,38 @@
 import React, { useState, useEffect } from "react";
 import "react-quill/dist/quill.snow.css";
-import ReactQuill from "react-quill";
-import { Container, Form, Button } from "react-bootstrap";
+// import ReactQuill from "react-quill";
+import {
+  Container,
+  Form,
+  Button,
+  InputGroup,
+  FormControl,
+} from "react-bootstrap";
 import "./styles.css";
 
 const NewBlogPost = () => {
   const postNewBlog = async () => {
     const response = fetch("http://localhost:3001/blogs", { method: "POST" });
   };
-  const [body, setBody] = useState({});
-  const [text, setText] = useState("");
+  const [body, setBody] = useState(toBePosted);
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState(null);
+  const [text, setText] = useState(text);
 
-  const handleChange = (value) => {
-    setText({ text: value });
+  const toBePosted = {
+    title: title,
+    category: category,
+    content: text,
+  };
+
+  const handleChangeText = () => {
+    setText(text);
+  };
+  const handleChangeCategory = () => {
+    setCategory(category);
+  };
+  const handleChangeTitle = () => {
+    setTitle(title);
   };
 
   return (
@@ -20,9 +40,19 @@ const NewBlogPost = () => {
       <Form className="mt-5">
         <Form.Group controlId="blog-form" className="mt-3">
           <Form.Label>Title</Form.Label>
-          <Form.Control size="lg" placeholder="Title" />
+          <Form.Control
+            size="lg"
+            placeholder="Title"
+            value={title}
+            onChange={handleChangeTitle}
+          />
         </Form.Group>
-        <Form.Group controlId="blog-category" className="mt-3">
+        <Form.Group
+          controlId="blog-category"
+          className="mt-3"
+          value={category}
+          onChange={handleChangeCategory}
+        >
           <Form.Label>Category</Form.Label>
           <Form.Control size="lg" as="select">
             <option>Category1</option>
@@ -34,11 +64,15 @@ const NewBlogPost = () => {
         </Form.Group>
         <Form.Group controlId="blog-content" className="mt-3">
           <Form.Label>Blog Content</Form.Label>
-          <ReactQuill
-            value={text}
-            onChange={handleChange}
-            className="new-blog-content"
-          />
+          <InputGroup className="mb-3">
+            <FormControl
+              value={text}
+              onChange={handleChangeText}
+              placeholder="Username"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+            />
+          </InputGroup>
         </Form.Group>
         <Form.Group className="d-flex mt-3 justify-content-end">
           <Button type="reset" size="lg" variant="outline-dark">
